@@ -1,10 +1,18 @@
-const { read, store } = require("./readings-controller");
-const { readingsData } = require("./readings.data");
-const { readings } = require("./readings");
-const { meters } = require("../meters/meters");
+const { read, store } = require('./readings-controller');
+const { readingsData } = require('./readings.data');
+const { readings } = require('./readings');
+const { meters } = require('../meters/meters');
 
-describe("readings", () => {
-    it("should get readings with meter id from params", () => {
+describe('readings', () => {
+    it('return empty when messing meterId', () => {
+        const { getReadings } = readings(readingsData);
+        const readingsForMeter = read(getReadings, {
+            params: {},
+        });
+
+        expect(readingsForMeter).toEqual([]);
+    });
+    it('should get readings with meter id from params', () => {
         const { getReadings } = readings(readingsData);
         const readingsForMeter = read(getReadings, {
             params: {
@@ -15,7 +23,7 @@ describe("readings", () => {
         expect(readingsForMeter).toEqual(readingsData[meters.METER0]);
     });
 
-    it("should store readings with meter id and readings from body", () => {
+    it('should store readings with meter id and readings from body', () => {
         const { setReadings, getReadings } = readings(readingsData);
 
         const originalLength = getReadings(meters.METER0).length;

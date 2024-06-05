@@ -1,27 +1,73 @@
-const { pricePlans } = require("./price-plans");
-const { usageForAllPricePlans } = require("../usage/usage");
-
+const { pricePlans } = require('./price-plans');
+const { usageForAllPricePlans } = require('../usage/usage');
+const logger = require('../utils/logger');
+/**
+ * Show Recommend Price plan controller
+ * @param {Function} getReadings
+ * @param {Request} req
+ * @returns {Array<import('../usage/usage').PricePlan>}
+ */
 const recommend = (getReadings, req) => {
-    const meter = req.params.smartMeterId;
-    const pricePlanComparisons = usageForAllPricePlans(pricePlans, getReadings(meter)).sort((a, b) => extractCost(b) - extractCost(a))
-    if("limit" in req.query) {
-        return pricePlanComparisons.slice(0, req.query.limit);
+    try {
+        const meter = req.params.smartMeterId ? req.params.smartMeterId : null;
+        const pricePlanComparisons = usageForAllPricePlans(
+            pricePlans,
+            getReadings(meter)
+        ).sort((a, b) => extractCost(a) - extractCost(b));
+        if (req.query.limit) {
+            return pricePlanComparisons.slice(0, req.query.limit);
+        }
+        return pricePlanComparisons;
+    } catch (err) {
+        logger(`error recommend controller: ${err}`);
     }
-    return pricePlanComparisons;
+    return [];
 };
 
+/**
+ * get Cost of price plan
+ * @param {Object} cost
+ * @returns {Number}
+ */
 const extractCost = (cost) => {
-    const [, value] = Object.entries(cost).find( ([key]) => key in pricePlans)
-    return value
-}
+    try {
+        const [, value] = Object.entries(cost).find(
+            ([key]) => key in pricePlans
+        );
+        return value;
+    } catch (err) {
+        logger(`error extractCost controller: ${err}`);
+        return 0;
+    }
+};
 
-const compare = (getData, req) => {
-    const meter = req.params.smartMeterId;
-    const pricePlanComparisons = usageForAllPricePlans(pricePlans, getData(meter));
-    return {
-        smartMeterId: req.params.smartMeterId,
-        pricePlanComparisons,
-    };
+/**
+ * Compare price plan controller
+ * @param {Function} getReadings
+ * @param {Request} req
+ * @returns {Object {
+ *      smartMeterId: String,
+ *      pricePlanComparisons: Array<import('../usage/usage').PricePlan>
+ * }}
+ */
+const compare = (getReadings, req) => {
+    const meter = req.params.smartMeterId ? req.params.smartMeterId : null;
+    try {
+        const pricePlanComparisons = usageForAllPricePlans(
+            pricePlans,
+            getReadings(meter)
+        );
+        return {
+            smartMeterId: meter,
+            pricePlanComparisons,
+        };
+    } catch (err) {
+        logger(`error compare controller: ${err}`);
+        return {
+            smartMeterId: meter,
+            pricePlanComparisons: [],
+        };
+    }
 };
 
 module.exports = { recommend, compare };

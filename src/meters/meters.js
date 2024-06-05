@@ -1,5 +1,8 @@
 const { pricePlans, pricePlanNames } = require("../price-plans/price-plans");
 
+/**
+ * Object Meter ID
+ */
 const meters = {
     METER0: "smart-meter-0",
     METER1: "smart-meter-1",
@@ -8,6 +11,9 @@ const meters = {
     METER4: "smart-meter-4",
 };
 
+/**
+ * Object Price plans mapping to each meter ID
+ */
 const meterPricePlanMap = {
     [meters.METER0]: pricePlans[pricePlanNames.PRICEPLAN0],
     [meters.METER1]: pricePlans[pricePlanNames.PRICEPLAN1],

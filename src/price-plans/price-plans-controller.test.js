@@ -1,10 +1,10 @@
-const { meters } = require("../meters/meters");
-const { pricePlanNames } = require("./price-plans");
-const { readings } = require("../readings/readings");
-const { compare, recommend } = require("./price-plans-controller");
+const { meters } = require('../meters/meters');
+const { pricePlanNames } = require('./price-plans');
+const { readings } = require('../readings/readings');
+const { compare, recommend } = require('./price-plans-controller');
 
-describe("price plans", () => {
-    it("should compare usage cost for all price plans", () => {
+describe('price plans', () => {
+    it('should compare usage cost for all price plans', () => {
         const { getReadings } = readings({
             [meters.METER0]: [
                 { time: 1607686125, reading: 0.26785 },
@@ -16,29 +16,29 @@ describe("price plans", () => {
         const expected = {
             pricePlanComparisons: [
                 {
-                    [pricePlanNames.PRICEPLAN0]: 0.26785 / 48 * 10,
+                    [pricePlanNames.PRICEPLAN0]: (0.26785 / 48) * 10,
                 },
                 {
-                    [pricePlanNames.PRICEPLAN1]: 0.26785 / 48 * 2,
+                    [pricePlanNames.PRICEPLAN1]: (0.26785 / 48) * 2,
                 },
                 {
-                    [pricePlanNames.PRICEPLAN2]: 0.26785 / 48 * 1,
+                    [pricePlanNames.PRICEPLAN2]: (0.26785 / 48) * 1,
                 },
             ],
-            smartMeterId: meters.METER0
+            smartMeterId: meters.METER0,
         };
 
         const recommendation = compare(getReadings, {
             params: {
                 smartMeterId: meters.METER0,
             },
-            query: {}
+            query: {},
         });
 
         expect(recommendation).toEqual(expected);
     });
 
-    it("should recommend usage cost for all price plans by ordering from cheapest to expensive", () => {
+    it('should recommend usage cost for all price plans by ordering from cheapest to expensive', () => {
         const { getReadings } = readings({
             [meters.METER0]: [
                 { time: 1607686125, reading: 0.26785 },
@@ -49,13 +49,13 @@ describe("price plans", () => {
 
         const expected = [
             {
-                [pricePlanNames.PRICEPLAN2]: 0.26785 / 48 * 1,
+                [pricePlanNames.PRICEPLAN2]: (0.26785 / 48) * 1,
             },
             {
-                [pricePlanNames.PRICEPLAN1]: 0.26785 / 48 * 2,
+                [pricePlanNames.PRICEPLAN1]: (0.26785 / 48) * 2,
             },
             {
-                [pricePlanNames.PRICEPLAN0]: 0.26785 / 48 * 10,
+                [pricePlanNames.PRICEPLAN0]: (0.26785 / 48) * 10,
             },
         ];
 
@@ -63,13 +63,13 @@ describe("price plans", () => {
             params: {
                 smartMeterId: meters.METER0,
             },
-            query: {}
+            query: {},
         });
 
         expect(recommendation).toEqual(expected);
     });
 
-    it("should limit recommendation", () => {
+    it('should limit recommendation', () => {
         const { getReadings } = readings({
             [meters.METER0]: [
                 { time: 1607686125, reading: 0.26785 },
@@ -80,10 +80,10 @@ describe("price plans", () => {
 
         const expected = [
             {
-                [pricePlanNames.PRICEPLAN2]: 0.26785 / 48 * 1,
+                [pricePlanNames.PRICEPLAN2]: (0.26785 / 48) * 1,
             },
             {
-                [pricePlanNames.PRICEPLAN1]: 0.26785 / 48 * 2,
+                [pricePlanNames.PRICEPLAN1]: (0.26785 / 48) * 2,
             },
         ];
 
@@ -92,8 +92,8 @@ describe("price plans", () => {
                 smartMeterId: meters.METER0,
             },
             query: {
-                limit: 2
-            }
+                limit: 2,
+            },
         });
 
         expect(recommendation).toEqual(expected);
