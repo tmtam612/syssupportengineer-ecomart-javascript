@@ -86,29 +86,6 @@ const usageForAllPricePlans = (pricePlans, readings) => {
         return [];
     }
 };
-// const energeyConsumedKWh = (pricePlan, readings) => {
-//     if (!pricePlan) return 'No Price Plan';
-//     if (!readings || readings.length === 0) return 0;
-
-//     const startTime = moment().subtract(1, 'weeks').startOf('week');
-//     const endTime = moment().subtract(1, 'weeks').startOf('week');
-//     const averageCost = averageCost(readings, startTime, endTime);
-//     const duration = (endTime - startTime) / 3600;
-//     const energeyConsumed = averageCost * duration;
-//     return pricePlan.rate * energeyConsumed;
-// };
-
-// const averageCost = (readings, startTime, endTime) => {
-//     try {
-//         const filterMatchCost = readings.filter(
-//             (item) => item.time >= startTime && item.time <= endTime
-//         );
-//         return average(filterMatchCost);
-//     } catch (err) {
-//         logger(`error average function: ${err}`);
-//         return 0;
-//     }
-// };
 
 module.exports = {
     average,

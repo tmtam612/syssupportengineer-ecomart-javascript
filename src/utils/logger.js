@@ -23,10 +23,6 @@ const winstonLogger = winston.createLogger({
     format: combine(timestamp(), customFormat),
 });
 
-dailyRotateFileTransport.on('new', (newFileName) => {
-    logger(`New log file created ${newFileName}`);
-});
-
 dailyRotateFileTransport.on('rotate', (oldFileName, newFileName) => {
     logger(`log file rotate [${oldFileName} -> ${newFileName}]`);
 });

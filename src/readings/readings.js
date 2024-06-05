@@ -44,4 +44,3 @@ const readings = (data) => ({
 module.exports = {
     readings,
 };
-// export default { readings };
